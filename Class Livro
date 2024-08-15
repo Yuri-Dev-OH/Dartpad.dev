@@ -1,0 +1,65 @@
+class Livro {
+  // Atributos da classe
+  String titulo;
+  String autor;
+  int anoPublicacao;
+  String editora;
+  double precoDeCusto;  // Preço de custo do livro
+  double precoDeVenda;  // Preço de venda do livro
+  int vendas;           // Número de unidades vendidas
+  double lucro;         // Lucro total do livro
+  String genero;
+
+  // Construtor da classe
+  Livro({
+    required this.titulo,
+    required this.autor,
+    required this.anoPublicacao,
+    required this.editora,
+    required this.precoDeCusto,
+    required this.precoDeVenda,
+    required this.vendas,
+    required this.lucro,
+    required this.genero,
+  });
+
+  // Método para calcular o lucro total
+  void calcularLucroTotal() {
+    lucro = calcularLucroPorUnidade() * vendas;
+  }
+
+  // Método para calcular o lucro por unidade
+  double calcularLucroPorUnidade() {
+    return precoDeVenda - precoDeCusto;
+  }
+
+  // Método para exibir informações específicas do livro
+  void exibirInformacoes() {
+    calcularLucroTotal(); // Calcula o lucro total antes de exibir as informações
+    print("Nome do autor: $autor");
+    print("Título do livro: $titulo");
+    print("Preço de custo do livro: R\$${precoDeCusto.toStringAsFixed(2)}");
+    print("Preço de venda do livro: R\$${precoDeVenda.toStringAsFixed(2)}");
+    print("Número de unidades vendidas: $vendas");
+    print("Lucro total do livro: R\$${lucro.toStringAsFixed(2)}");
+    print("Lucro por unidade: R\$${calcularLucroPorUnidade().toStringAsFixed(2)}");
+  }
+}
+
+void main() {
+  // Criar uma instância da classe Livro
+  Livro livro1 = Livro(
+    titulo: "O Senhor dos Pastéis",
+    autor: "Snorlax",
+    anoPublicacao: 2024,
+    editora: "Equipe Rocket",
+    precoDeCusto: 5.0,
+    precoDeVenda: 10.0,
+    vendas: 100,  // Número de unidades vendidas
+    lucro: 0.0,   // Inicializa o lucro como 0.0 (será calculado)
+    genero: "Comédia",
+  );
+  
+  // Chamar o método para exibir as informações desejadas
+  livro1.exibirInformacoes();
+}
