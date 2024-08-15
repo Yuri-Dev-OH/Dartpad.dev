@@ -1,0 +1,53 @@
+class Livro{
+  // atributos
+  String autor;
+  String titulo;
+  String editora;
+  double precoCusto;
+  double precoVenda;
+  double lucro;
+  int ano;
+  int edicao;
+  
+  // construtor
+  Livro(this.titulo, this.autor, this.editora, this.precoCusto,this.precoVenda, this.lucro, this.ano, this.edicao );
+  
+  // métodos específicos
+  void imprimirInfo(){
+    print("nome: $autor");
+    print("titulo: $titulo");
+    print("editora: $editora");
+    print("preço Custo: R\$${precoCusto.toStringAsFixed(2)}");
+    print("preço Venda: R\$${precoVenda.toStringAsFixed(2)}");
+    print("Lucro      : R\$${lucro.toStringAsFixed(0)}%");
+    print("Ano        : $ano");
+    print("Edição     : $edicao");
+  }
+  
+  void imprimirAutorTitulo(){
+    print("nome: $autor");
+    print("titulo: $titulo");
+  }
+  
+  void calcularPrecoVenda(double lucro){
+    this.lucro = lucro;
+    precoVenda = precoCusto + precoCusto*(lucro/100);
+  }
+  
+  double imprimirPrecoVenda(){
+    return (precoVenda);
+  }
+  
+  
+}//fim da classe
+
+void main() {
+   Livro livro1 = Livro("Intr. Flutter","Maria","TI",100,75,50,2023,2);
+   livro1.imprimirInfo();
+   print("--------------------");
+   livro1.imprimirAutorTitulo();
+   print("--------------");
+   livro1.calcularPrecoVenda(75);
+   print(livro1.imprimirPrecoVenda());
+  
+}
