@@ -1,0 +1,136 @@
+class Madeira {
+  late double altura_a, comprimento_a, altura_b, comprimento_b;
+  late double altura_materia, comprimento_materia, area_materia;
+  late double area_a, area_b;
+  late int qt_pcs_a, qt_pcs_b;
+//------------------------------------------------------------------------------------------
+  
+  void setaltura_a(double aa) {
+    altura_a = aa;
+  }
+
+  void setcomprimento_a(double ca) {
+    comprimento_a = ca;
+  }
+
+  
+//------------------------------------------------------------------------------------------
+
+  void setaltura_b(double ab) {
+    altura_b = ab;
+  }
+
+  void setcomprimento_b(double cb) {
+    comprimento_b = cb;
+  }
+
+
+  
+//------------------------------------------------------------------------------------------
+
+  void setaltura_materia(double am) {
+    altura_materia = am;
+  }
+
+  void setcomprimento_materia(double cm) {
+    comprimento_materia = cm;
+  }
+
+ 
+//------------------------------------------------------------------------------------------
+
+  double getaltura_a() {
+    return altura_a;
+  }
+
+  double getcomprimento_a() {
+    return comprimento_a;
+  }
+
+  double getaltura_b() {
+    return altura_b;
+  }
+
+  double getcomprimento_b() {
+    return comprimento_b;
+  }
+
+  double getaltura_materia() {
+    return altura_materia;
+  }
+
+  double getcomprimento_materia() {
+    return comprimento_materia;
+  }
+
+//------------------------------------------------------------------------------------------
+
+  void calcular_area_materia() {
+    area_materia = altura_materia * comprimento_materia;
+  }
+
+  double getcalcular_area_materia() {
+    return area_materia;
+  }
+  
+//------------------------------------------------------------------------------------------
+  
+  void calcular_area_a() {
+    area_a = altura_a * comprimento_a;
+  }
+
+  double getcalcular_area_a() {
+    return area_a;
+  }
+  
+//------------------------------------------------------------------------------------------
+  
+  void calcular_area_b() {
+    area_b = altura_b * comprimento_b;
+  }
+
+  double getcalcular_area_b() {
+    return area_b;
+  }
+}
+
+  void calcular_qt_pcs_a() {
+    qt_pcs_a = area_materia / area_a;
+  }
+
+   void calcular_qt_pcs_b() {
+    qt_pcs_b = area_materia / area_a;
+  }
+
+
+//------------------------------------------------------------------------------------------
+
+void main() {
+  var m1 = Madeira();
+  m1.setaltura_materia(10.00);
+  m1.setcomprimento_materia(10.00);
+  m1.calcular_area_materia();
+
+  print('DADOS INFORMADOS:');
+
+  print('Altura:${m1.getaltura_materia()}');
+  print('Comprimento:${m1.getcomprimento_materia()}');
+
+  print('');
+
+  print('RESULTADOS:');
+
+  print('Área da matéria prima:${m1.getcalcular_area_materia().toStringAsFixed(2)}');
+  
+  m1.setaltura_a(5.00);
+  m1.setcomprimento_a(4.00);
+  m1.calcular_area_a();
+  print('Área A: ${m1.getcalcular_area_a().toStringAsFixed(2)}');
+  
+  m1.setaltura_b(6.00);
+  m1.setcomprimento_b(3.00);
+  m1.calcular_area_b();
+  print('Área B: ${m1.getcalcular_area_b().toStringAsFixed(2)}');
+
+  
+}
