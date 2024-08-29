@@ -1,0 +1,48 @@
+class Calc{ 
+  late double salario, salario_final, valor_da_hora; 
+  late int faltas,  desconto;
+  void setsalario(double s){
+    salario = s;
+  }
+  double getsalario(){
+    return salario;  
+  }
+  void setfaltas(int f){
+    faltas = f;
+  }
+  int getfaltas(){
+    return faltas;  
+  }
+   void calcular_valor_da_hora(){
+   valor_da_hora = salario/240;
+  }
+  void desconto_das_faltas(){
+    desconto = 8 * faltas;
+  }
+  
+  void calcular_salario_final (){
+    calcular_valor_da_hora();
+    salario_final = salario - (valor_da_hora*desconto);
+  }
+  
+  double getsalario_final(){
+    return  salario_final;
+  }
+}
+
+
+
+
+
+
+void main() {
+   var c1 = Calc();
+   c1.setsalario(1000);
+   c1.setfaltas(2);
+   c1.calcular_salario_final ();
+   c1.desconto();
+  
+   print('Salário :${c1.getsalario()}');
+   print('Dias que faltou :${c1.getfaltas()}');
+   print('Salário final:${c1.getsalario_final()}');
+}
