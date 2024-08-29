@@ -1,0 +1,85 @@
+class Imc {
+  late double peso, altura, imc;
+
+  void setpeso(double p) {
+    peso = p;
+  }
+
+  void setaltura(double a) {
+    altura = a;
+  }
+
+  double getpeso() {
+    return peso;
+  }
+
+  double getaltura() {
+    return altura;
+  }
+
+  void calcular_imc() {
+    imc = peso / (altura * altura);
+  }
+
+  double getcalcular_imc() {
+    return imc;
+  }
+}
+
+void main() {
+  var c1 = Imc();
+  c1.setpeso(70.00);
+  c1.setaltura(1.69);
+  c1.calcular_imc();
+
+  print('DADOS INFORMADOS:');
+
+  print('Peso:${c1.getpeso()}');
+  print('Altura:${c1.getaltura()}');
+
+  print('');
+
+  print('RESULTADOS:');
+
+  print('IMC:${c1.getcalcular_imc().toStringAsFixed(2)}');
+  double imc = c1.getcalcular_imc();
+  String nivel;
+
+  if (imc < 18.5) {
+    nivel = 'Magreza';
+  } else if (imc >= 18.5 && imc < 24.9) {
+    nivel = 'Normal';
+  } else if (imc >= 25.0 && imc < 29.9) {
+    nivel = 'Sobrepeso';
+  } else if (imc >= 30.0 && imc < 39.9) {
+    nivel = 'Obesidade';  
+  } else {
+    nivel = 'Obesidade grave';
+  }
+
+  print('NÍVEL DE IMC: $nivel');
+
+  print('');
+
+  print('TABELA DO IMC:');
+
+  print('');
+
+  print('MENOR QUE 18,5: Magreza');
+
+  print('');
+
+  print('ENTRE 18,5 E 24,9: Normal');
+
+  print('');
+
+  print('ENTRE 25,0 E 29,9: Sobrepeso');
+
+  print('');
+
+  print('ENTRE 30,0 E 39,9: Obesidade');
+
+  print('');
+
+  print('MAIOR QUE 40,0: Obesidade grave');
+}
