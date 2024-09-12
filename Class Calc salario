@@ -1,52 +1,73 @@
-class CalcSalarioRec{ 
-  late double salario,faltas,h, salarioRec; 
-  
-  void setSalario(double v){
-    salario = v;
+class CalcSalarioRec {
+  // Atributos da classe
+  late double salario;    
+  late double faltas;    
+  late double h;
+  late double salarioRec; 
+
+  // Método para definir o valor do salário
+  void setSalario(double v) {
+    salario = v; 
   }
-  double getSalario(){
-    return salario;  
+
+  // Método para obter o valor do salário
+  double getSalario() {
+    return salario; 
   }
-  
-  void valorH(){
-    h = salario/240;
+
+  // Método para calcular o valor de uma hora de trabalho
+  void valorH() {
+    h = salario / 240; 
   }
-  
-  double getH(){
-    return h;
+
+  // Método para obter o valor de uma hora de trabalho
+  double getH() {
+    return h; 
   }
-  
-  void setFaltas(double v){
+
+  // Método para definir o número de faltas
+  void setFaltas(double v) {
     faltas = v;
   }
-  
-  double getFaltas(){
-    return faltas;  
+
+  // Método para obter o número de faltas
+  double getFaltas() {
+    return faltas; 
   }
+
+  // Método para calcular o salário líquido descontando faltas
+  void desconto() {
+
+    salarioRec = salario - ((faltas * 8) * h);
   
-  void desconto(){
-    salarioRec= salario-((faltas*8)*h);
   }
-  
-  double getDesconto(){
-    return salarioRec;
+
+  // Método para obter o salário líquido após descontos
+  double getDesconto() {
+    return salarioRec; 
   }
 }
 
+// Função principal 
 void main() {
-   var c1 = CalcSalarioRec();
-   c1.setSalario(1500);
-   print('Salario:${c1.getSalario()}');
-   c1.setFaltas(10);
-   print('Faltas:${c1.getFaltas()}');
-   c1.valorH();
-   c1.desconto();  
-   
-   print('Valor descontado:R\$${ (c1.salario -c1.getDesconto()).toStringAsFixed(2)}');  
-   
+  // Cria uma nova instância da classe CalcSalarioRec
+  var c1 = CalcSalarioRec();
   
-   print('Salario final:R\$${c1.getDesconto().toStringAsFixed(2)}');
+  // Define o salário do funcionário
+  c1.setSalario(1500);
+  print('Salario: ${c1.getSalario()}'); 
+
+  // Define o número de faltas do funcionário
+  c1.setFaltas(10);
+  print('Faltas: ${c1.getFaltas()}'); 
+
+  // Calcula o valor da hora de trabalho
+  c1.valorH();
   
-  
-  
+  // Calcula o salário líquido após descontos por faltas
+  c1.desconto();
+
+  print('Valor descontado: R\$${(c1.getSalario() - c1.getDesconto()).toStringAsFixed(2)}');
+
+  print('Salario final: R\$${c1.getDesconto().toStringAsFixed(2)}');
 }
