@@ -1,14 +1,15 @@
+// Define uma classe chamada Livro
 class Livro {
   // Atributos da classe
-  String titulo;
-  String autor;
-  int anoPublicacao;
-  String editora;
-  double precoDeCusto;  // Preço de custo do livro
-  double precoDeVenda;  // Preço de venda do livro
-  int vendas;           // Número de unidades vendidas
-  double lucro;         // Lucro total do livro
-  String genero;
+  String titulo;          
+  String autor;          
+  int anoPublicacao;      
+  String editora;         
+  double precoDeCusto;    
+  double precoDeVenda;   
+  int vendas;            
+  double lucro;          
+  String genero;        
 
   // Construtor da classe
   Livro({
@@ -25,17 +26,21 @@ class Livro {
 
   // Método para calcular o lucro total
   void calcularLucroTotal() {
+    // Calcula o lucro total multiplicando o lucro por unidade pelo número de vendas
     lucro = calcularLucroPorUnidade() * vendas;
   }
 
   // Método para calcular o lucro por unidade
   double calcularLucroPorUnidade() {
+    // O lucro por unidade é a diferença entre o preço de venda e o custo de produção
     return precoDeVenda - precoDeCusto;
   }
 
-  // Método para exibir informações específicas do livro
+  // Método para exibir informações sobre o livro
   void exibirInformacoes() {
-    calcularLucroTotal(); // Calcula o lucro total antes de exibir as informações
+    // Primeiro, calcula o lucro total antes de exibir as informações
+    calcularLucroTotal(); 
+    // Imprime as informações do livro
     print("Nome do autor: $autor");
     print("Título do livro: $titulo");
     print("Preço de custo do livro: R\$${precoDeCusto.toStringAsFixed(2)}");
@@ -46,20 +51,21 @@ class Livro {
   }
 }
 
+// Função principal que é executada quando o programa começa
 void main() {
-  // Criar uma instância da classe Livro
+  
   Livro livro1 = Livro(
     titulo: "O Senhor dos Pastéis",
     autor: "Snorlax",
     anoPublicacao: 2024,
     editora: "Equipe Rocket",
-    precoDeCusto: 5.0,
-    precoDeVenda: 10.0,
-    vendas: 100,  // Número de unidades vendidas
-    lucro: 0.0,   // Inicializa o lucro como 0.0 (será calculado)
-    genero: "Comédia",
+    precoDeCusto: 5.0,    
+    precoDeVenda: 10.0,   
+    vendas: 100,         
+    lucro: 0.0,           
+    genero: "Comédia",    
   );
   
-  // Chamar o método para exibir as informações desejadas
+  // Chama o método para exibir as informações sobre o livro
   livro1.exibirInformacoes();
 }
