@@ -1,136 +1,148 @@
-class Madeira {
-  late double altura_a, comprimento_a, altura_b, comprimento_b;
-  late double altura_materia, comprimento_materia, area_materia;
-  late double area_a, area_b;
-  late int qt_pcs_a, qt_pcs_b;
-//------------------------------------------------------------------------------------------
-  
-  void setaltura_a(double aa) {
-    altura_a = aa;
+class CalcMateria {
+  // Atributos da classe 
+  late double altM;   // Altura da matéria-prima
+  late double compM;  // Comprimento da matéria-prima
+  late double altA;   // Altura da primeira peça de corte
+  late double compA;  // Comprimento da primeira peça de corte
+  late double altB;   // Altura da segunda peça de corte
+  late double compB;  // Comprimento da segunda peça de corte
+  late double areaM;  // Área da matéria-prima
+  late double aPecaA; // Área da primeira peça de corte
+  late double quantA; // Quantidade de peças do tipo A que podem ser cortadas
+  late double sobra;  // Sobras de material após o corte
+
+  // Método para definir a altura da matéria-prima
+  void setAltM(double v) {
+    altM = v;
   }
 
-  void setcomprimento_a(double ca) {
-    comprimento_a = ca;
+  // Método para obter a altura da matéria-prima
+  double getAltM() {
+    return altM; 
   }
 
-  
-//------------------------------------------------------------------------------------------
-
-  void setaltura_b(double ab) {
-    altura_b = ab;
+  // Método para definir o comprimento da matéria-prima
+  void setCompM(double v) {
+    compM = v; 
   }
 
-  void setcomprimento_b(double cb) {
-    comprimento_b = cb;
+  // Método para obter o comprimento da matéria-prima
+  double getCompM() {
+    return compM; 
   }
 
-
-  
-//------------------------------------------------------------------------------------------
-
-  void setaltura_materia(double am) {
-    altura_materia = am;
+  // Método para definir a altura da primeira peça de corte
+  void setAltA(double v) {
+    altA = v; 
   }
 
-  void setcomprimento_materia(double cm) {
-    comprimento_materia = cm;
+  // Método para obter a altura da primeira peça de corte
+  double getAltA() {
+    return altA;
   }
 
- 
-//------------------------------------------------------------------------------------------
-
-  double getaltura_a() {
-    return altura_a;
+  // Método para definir o comprimento da primeira peça de corte
+  void setCompA(double v) {
+    compA = v; 
   }
 
-  double getcomprimento_a() {
-    return comprimento_a;
+  // Método para obter o comprimento da primeira peça de corte
+  double getCompA() {
+    return compA;
   }
 
-  double getaltura_b() {
-    return altura_b;
+  // Método para definir a altura da segunda peça de corte
+  void setAltB(double v) {
+    altB = v; 
   }
 
-  double getcomprimento_b() {
-    return comprimento_b;
+  // Método para obter a altura da segunda peça de corte
+  double getAltB() {
+    return altB; 
   }
 
-  double getaltura_materia() {
-    return altura_materia;
+  // Método para definir o comprimento da segunda peça de corte
+  void setCompB(double v) {
+    compB = v; 
   }
 
-  double getcomprimento_materia() {
-    return comprimento_materia;
+  // Método para obter o comprimento da segunda peça de corte
+  double getCompB() {
+    return compB; 
   }
 
-//------------------------------------------------------------------------------------------
-
-  void calcular_area_materia() {
-    area_materia = altura_materia * comprimento_materia;
+  // Método para calcular a área da matéria-prima
+  void calcAreaM() {
+    areaM = altM * compM; 
   }
 
-  double getcalcular_area_materia() {
-    return area_materia;
-  }
-  
-//------------------------------------------------------------------------------------------
-  
-  void calcular_area_a() {
-    area_a = altura_a * comprimento_a;
+  // Método para obter a área da matéria-prima
+  double getcalcAreaM() {
+    return areaM; 
   }
 
-  double getcalcular_area_a() {
-    return area_a;
-  }
-  
-//------------------------------------------------------------------------------------------
-  
-  void calcular_area_b() {
-    area_b = altura_b * comprimento_b;
+  // Método para calcular a área da primeira peça de corte
+  void calcAPecaA() {
+    aPecaA = altA * compA;
   }
 
-  double getcalcular_area_b() {
-    return area_b;
+  // Método para obter a área da primeira peça de corte
+  double getcalcAPecaA() {
+    return aPecaA;
+  }
+
+  // Método para calcular a quantidade de peças do tipo A que podem ser cortadas
+  void calcQuantA() {
+    quantA = areaM / aPecaA; 
+  }
+
+  // Método para obter a quantidade de peças do tipo A que podem ser cortadas
+  double getcalcQuantA() {
+    return quantA; 
+  }
+
+  // Método para calcular a sobra de material após o corte
+  void calcSobra() {
+    sobra = (altB * compB) - (areaM % aPecaA); 
+    // Calcula a sobra como a diferença entre a área da peça B e o resto da divisão da área da matéria-prima pela área da peça A
+  }
+
+  // Método para obter a sobra de material após o corte
+  double getcalcSobra() {
+    return sobra; 
   }
 }
 
-  void calcular_qt_pcs_a() {
-    qt_pcs_a = area_materia / area_a;
-  }
-
-   void calcular_qt_pcs_b() {
-    qt_pcs_b = area_materia / area_a;
-  }
-
-
-//------------------------------------------------------------------------------------------
-
+// Função principal 
 void main() {
-  var m1 = Madeira();
-  m1.setaltura_materia(10.00);
-  m1.setcomprimento_materia(10.00);
-  m1.calcular_area_materia();
-
-  print('DADOS INFORMADOS:');
-
-  print('Altura:${m1.getaltura_materia()}');
-  print('Comprimento:${m1.getcomprimento_materia()}');
-
-  print('');
-
-  print('RESULTADOS:');
-
-  print('Área da matéria prima:${m1.getcalcular_area_materia().toStringAsFixed(2)}');
+  // Cria uma nova instância da classe CalcMateria
+  var calculo1 = CalcMateria();
   
-  m1.setaltura_a(5.00);
-  m1.setcomprimento_a(4.00);
-  m1.calcular_area_a();
-  print('Área A: ${m1.getcalcular_area_a().toStringAsFixed(2)}');
+  // Define as dimensões da matéria-prima
+  calculo1.setAltM(6);
+  print('Altura da materia prima: ${calculo1.getAltM()}');
+  calculo1.setCompM(5);
+  print('Comprimento da materia prima: ${calculo1.getCompM()}');
   
-  m1.setaltura_b(6.00);
-  m1.setcomprimento_b(3.00);
-  m1.calcular_area_b();
-  print('Área B: ${m1.getcalcular_area_b().toStringAsFixed(2)}');
-
+  // Define as dimensões da primeira peça de corte
+  calculo1.setAltA(3);
+  print('Altura da primeira peça de corte: ${calculo1.getAltA()}');
+  calculo1.setCompA(3);
+  print('Comprimento da primeira peça de corte: ${calculo1.getCompA()}');
   
+  // Define as dimensões da segunda peça de corte
+  calculo1.setAltB(2);
+  print('Altura da segunda peça de corte: ${calculo1.getAltB()}');
+  calculo1.setCompB(2);
+  print('Comprimento da segunda peça de corte: ${calculo1.getCompB()}');
+  
+  // Calcula e exibe a quantidade de peças do tipo A que podem ser cortadas
+  calculo1.calcAreaM();
+  calculo1.calcAPecaA();
+  calculo1.calcQuantA();
+  print('Quantidades de peças: ${calculo1.getcalcQuantA().toInt()}');
+  
+  // Calcula e exibe a sobra de material após o corte
+  calculo1.calcSobra();
+  print('Sobra de material: R\$${calculo1.getcalcSobra().toInt()}');
 }
