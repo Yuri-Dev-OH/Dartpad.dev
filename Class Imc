@@ -1,85 +1,91 @@
 class Imc {
-  late double peso, altura, imc;
+  // Atributos da classe 
+  late double peso;  
+  late double altura; 
+  late double imc;    
 
+  // Método para definir o peso
   void setpeso(double p) {
-    peso = p;
+    peso = p; // Atribui o valor do peso passado como parâmetro ao atributo peso
   }
 
+  // Método para definir a altura
   void setaltura(double a) {
-    altura = a;
+    altura = a; 
   }
+
 
   double getpeso() {
-    return peso;
+    return peso; 
   }
 
+ 
   double getaltura() {
-    return altura;
+    return altura; 
   }
 
+  // Método para calcular o IMC
   void calcular_imc() {
+    // Calcula o IMC usando a fórmula: peso / (altura * altura)
     imc = peso / (altura * altura);
   }
 
+  // Método para obter o IMC calculado
   double getcalcular_imc() {
-    return imc;
+    return imc; 
   }
 }
 
+
 void main() {
+  // Cria uma nova instância da classe Imc
   var c1 = Imc();
-  c1.setpeso(70.00);
-  c1.setaltura(1.69);
+  
+  // Define o peso e a altura usando os métodos da classe
+  c1.setpeso(70.00); 
+  c1.setaltura(1.69); 
+
+  // Calcula o IMC usando os valores fornecidos
   c1.calcular_imc();
 
+  // Exibe as informações fornecidas
   print('DADOS INFORMADOS:');
+  print('Peso: ${c1.getpeso()}'); 
+  print('Altura: ${c1.getaltura()}'); 
 
-  print('Peso:${c1.getpeso()}');
-  print('Altura:${c1.getaltura()}');
+  print(''); 
 
-  print('');
-
+  // Exibe o resultado do cálculo do IMC
   print('RESULTADOS:');
+  print('IMC: ${c1.getcalcular_imc().toStringAsFixed(2)}');
 
-  print('IMC:${c1.getcalcular_imc().toStringAsFixed(2)}');
-  double imc = c1.getcalcular_imc();
-  String nivel;
+  // Obtém o IMC calculado e define a categoria do IMC
+  double imc = c1.getcalcular_imc(); 
+  String nivel; 
 
+  // Determina a categoria do IMC com base nos valores
   if (imc < 18.5) {
-    nivel = 'Magreza';
+    nivel = 'Magreza'; 
   } else if (imc >= 18.5 && imc < 24.9) {
-    nivel = 'Normal';
+    nivel = 'Normal'; 
   } else if (imc >= 25.0 && imc < 29.9) {
-    nivel = 'Sobrepeso';
+    nivel = 'Sobrepeso'; 
   } else if (imc >= 30.0 && imc < 39.9) {
-    nivel = 'Obesidade';  
+    nivel = 'Obesidade'; 
   } else {
-    nivel = 'Obesidade grave';
+    nivel = 'Obesidade grave'; 
   }
 
+  // Exibe o nível de IMC
   print('NÍVEL DE IMC: $nivel');
 
-  print('');
+  print(''); 
 
+  // Exibe a tabela do IMC com categorias
   print('TABELA DO IMC:');
-
-  print('');
-
   print('MENOR QUE 18,5: Magreza');
-
-  print('');
-
   print('ENTRE 18,5 E 24,9: Normal');
-
-  print('');
-
   print('ENTRE 25,0 E 29,9: Sobrepeso');
-
-  print('');
-
   print('ENTRE 30,0 E 39,9: Obesidade');
-
-  print('');
-
   print('MAIOR QUE 40,0: Obesidade grave');
 }
