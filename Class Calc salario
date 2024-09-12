@@ -1,48 +1,52 @@
-class Calc{ 
-  late double salario, salario_final, valor_da_hora; 
-  late int faltas,  desconto;
-  void setsalario(double s){
-    salario = s;
+class CalcSalarioRec{ 
+  late double salario,faltas,h, salarioRec; 
+  
+  void setSalario(double v){
+    salario = v;
   }
-  double getsalario(){
+  double getSalario(){
     return salario;  
   }
-  void setfaltas(int f){
-    faltas = f;
+  
+  void valorH(){
+    h = salario/240;
   }
-  int getfaltas(){
+  
+  double getH(){
+    return h;
+  }
+  
+  void setFaltas(double v){
+    faltas = v;
+  }
+  
+  double getFaltas(){
     return faltas;  
   }
-   void calcular_valor_da_hora(){
-   valor_da_hora = salario/240;
-  }
-  void desconto_das_faltas(){
-    desconto = 8 * faltas;
+  
+  void desconto(){
+    salarioRec= salario-((faltas*8)*h);
   }
   
-  void calcular_salario_final (){
-    calcular_valor_da_hora();
-    salario_final = salario - (valor_da_hora*desconto);
-  }
-  
-  double getsalario_final(){
-    return  salario_final;
+  double getDesconto(){
+    return salarioRec;
   }
 }
 
-
-
-
-
-
 void main() {
-   var c1 = Calc();
-   c1.setsalario(1000);
-   c1.setfaltas(2);
-   c1.calcular_salario_final ();
-   c1.desconto();
+   var c1 = CalcSalarioRec();
+   c1.setSalario(1500);
+   print('Salario:${c1.getSalario()}');
+   c1.setFaltas(10);
+   print('Faltas:${c1.getFaltas()}');
+   c1.valorH();
+   c1.desconto();  
+   
+   print('Valor descontado:R\$${ (c1.salario -c1.getDesconto()).toStringAsFixed(2)}');  
+   
   
-   print('Salário :${c1.getsalario()}');
-   print('Dias que faltou :${c1.getfaltas()}');
-   print('Salário final:${c1.getsalario_final()}');
+   print('Salario final:R\$${c1.getDesconto().toStringAsFixed(2)}');
+  
+  
+  
 }
