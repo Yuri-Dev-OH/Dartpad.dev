@@ -55,7 +55,7 @@ void main() {
   
   // Define o salário do funcionário
   c1.setSalario(1500);
-  print('Salario: ${c1.getSalario()}'); 
+  print('Sálario: ${c1.getSalario()}'); 
 
   // Define o número de faltas do funcionário
   c1.setFaltas(10);
@@ -69,5 +69,5 @@ void main() {
 
   print('Valor descontado: R\$${(c1.getSalario() - c1.getDesconto()).toStringAsFixed(2)}');
 
-  print('Salario final: R\$${c1.getDesconto().toStringAsFixed(2)}');
+  print('Salário final: R\$${c1.getDesconto().toStringAsFixed(2)}');
 }
