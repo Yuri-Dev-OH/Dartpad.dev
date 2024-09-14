@@ -1,114 +1,131 @@
 class CalcMateria {
   // Atributos da classe 
-  late double altM;   // Altura da matéria-prima
-  late double compM;  // Comprimento da matéria-prima
-  late double altA;   // Altura da primeira peça de corte
-  late double compA;  // Comprimento da primeira peça de corte
-  late double altB;   // Altura da segunda peça de corte
-  late double compB;  // Comprimento da segunda peça de corte
-  late double areaM;  // Área da matéria-prima
-  late double aPecaA; // Área da primeira peça de corte
-  late double quantA; // Quantidade de peças do tipo A que podem ser cortadas
-  late double sobra;  // Sobras de material após o corte
+  late double alturaMateriaPrima;   // Altura da matéria-prima em metros
+  late double comprimentoMateriaPrima;  // Comprimento da matéria-prima em metros
+  late double alturaPecaA;   // Altura da primeira peça de corte em metros
+  late double comprimentoPecaA;  // Comprimento da primeira peça de corte em metros
+  late double alturaPecaB;   // Altura da segunda peça de corte em metros
+  late double comprimentoPecaB;  // Comprimento da segunda peça de corte em metros
+  late double areaMateriaPrima;  // Área da matéria-prima em metros quadrados
+  late double areaPecaA; // Área da primeira peça de corte em metros quadrados
+  late double areaPecaB; // Área da segunda peça de corte em metros quadrados
+  late int quantidadePecasA;    // Quantidade de peças do tipo A que podem ser cortadas
+  late double sobra;  // Sobras de material após o corte em metros quadrados
+  late int quantidadePecasB;    // Quantidade de peças do tipo B que podem ser cortadas com a sobra
 
-  // Método para definir a altura da matéria-prima
-  void setAltM(double v) {
-    altM = v;
+  // Métodos para definir as dimensões
+  void setAlturaMateriaPrima(double v) {
+    alturaMateriaPrima = v;
   }
 
-  // Método para obter a altura da matéria-prima
-  double getAltM() {
-    return altM; 
+  void setComprimentoMateriaPrima(double v) {
+    comprimentoMateriaPrima = v; 
   }
 
-  // Método para definir o comprimento da matéria-prima
-  void setCompM(double v) {
-    compM = v; 
+  void setAlturaPecaA(double v) {
+    alturaPecaA = v; 
   }
 
-  // Método para obter o comprimento da matéria-prima
-  double getCompM() {
-    return compM; 
+  void setComprimentoPecaA(double v) {
+    comprimentoPecaA = v; 
   }
 
-  // Método para definir a altura da primeira peça de corte
-  void setAltA(double v) {
-    altA = v; 
+  void setAlturaPecaB(double v) {
+    alturaPecaB = v; 
   }
 
-  // Método para obter a altura da primeira peça de corte
-  double getAltA() {
-    return altA;
+  void setComprimentoPecaB(double v) {
+    comprimentoPecaB = v; 
   }
 
-  // Método para definir o comprimento da primeira peça de corte
-  void setCompA(double v) {
-    compA = v; 
+  // Métodos para obter as dimensões
+  double getAlturaMateriaPrima() {
+    return alturaMateriaPrima; 
   }
 
-  // Método para obter o comprimento da primeira peça de corte
-  double getCompA() {
-    return compA;
+  double getComprimentoMateriaPrima() {
+    return comprimentoMateriaPrima; 
   }
 
-  // Método para definir a altura da segunda peça de corte
-  void setAltB(double v) {
-    altB = v; 
+  double getAlturaPecaA() {
+    return alturaPecaA;
   }
 
-  // Método para obter a altura da segunda peça de corte
-  double getAltB() {
-    return altB; 
+  double getComprimentoPecaA() {
+    return comprimentoPecaA;
   }
 
-  // Método para definir o comprimento da segunda peça de corte
-  void setCompB(double v) {
-    compB = v; 
+  double getAlturaPecaB() {
+    return alturaPecaB; 
   }
 
-  // Método para obter o comprimento da segunda peça de corte
-  double getCompB() {
-    return compB; 
+  double getComprimentoPecaB() {
+    return comprimentoPecaB; 
   }
 
   // Método para calcular a área da matéria-prima
-  void calcAreaM() {
-    areaM = altM * compM; 
+  void calcAreaMateriaPrima() {
+    areaMateriaPrima = alturaMateriaPrima * comprimentoMateriaPrima; 
   }
 
   // Método para obter a área da matéria-prima
-  double getcalcAreaM() {
-    return areaM; 
+  double getAreaMateriaPrima() {
+    return areaMateriaPrima; 
   }
 
   // Método para calcular a área da primeira peça de corte
-  void calcAPecaA() {
-    aPecaA = altA * compA;
+  void calcAreaPecaA() {
+    areaPecaA = alturaPecaA * comprimentoPecaA;
   }
 
   // Método para obter a área da primeira peça de corte
-  double getcalcAPecaA() {
-    return aPecaA;
+  double getAreaPecaA() {
+    return areaPecaA;
+  }
+
+  // Método para calcular a área da segunda peça de corte
+  void calcAreaPecaB() {
+    areaPecaB = alturaPecaB * comprimentoPecaB;
+  }
+
+  // Método para obter a área da segunda peça de corte
+  double getAreaPecaB() {
+    return areaPecaB;
   }
 
   // Método para calcular a quantidade de peças do tipo A que podem ser cortadas
-  void calcQuantA() {
-    quantA = areaM / aPecaA; 
+  void calcQuantidadePecasA() {
+    if (areaPecaA > areaMateriaPrima) {
+      print('Não é possível cortar peças do tipo A, a área da peça é maior que a área da matéria-prima.');
+      quantidadePecasA = 0;
+      sobra = areaMateriaPrima; // Sobras são a área total da matéria-prima
+    } else {
+      quantidadePecasA = (areaMateriaPrima / areaPecaA).floor(); 
+      sobra = areaMateriaPrima - (quantidadePecasA * areaPecaA);
+    }
   }
 
   // Método para obter a quantidade de peças do tipo A que podem ser cortadas
-  double getcalcQuantA() {
-    return quantA; 
+  int getQuantidadePecasA() {
+    return quantidadePecasA; 
   }
 
-  // Método para calcular a sobra de material após o corte
-  void calcSobra() {
-    sobra = (altB * compB) - (areaM % aPecaA); 
-    // Calcula a sobra como a diferença entre a área da peça B e o resto da divisão da área da matéria-prima pela área da peça A
+  // Método para calcular a quantidade de peças do tipo B que podem ser cortadas com a sobra
+  void calcQuantidadePecasB() {
+    if (areaPecaB > sobra) {
+      quantidadePecasB = 0;
+    } else {
+      quantidadePecasB = (sobra / areaPecaB).floor();
+    }
+  }
+
+  // Método para obter a quantidade de peças do tipo B que podem ser cortadas
+  int getQuantidadePecasB() {
+    return quantidadePecasB; 
   }
 
   // Método para obter a sobra de material após o corte
-  double getcalcSobra() {
+  double getSobra() {
     return sobra; 
   }
 }
@@ -119,30 +136,34 @@ void main() {
   var calculo1 = CalcMateria();
   
   // Define as dimensões da matéria-prima
-  calculo1.setAltM(6);
-  print('Altura da materia prima: ${calculo1.getAltM()}');
-  calculo1.setCompM(5);
-  print('Comprimento da materia prima: ${calculo1.getCompM()}');
+  calculo1.setAlturaMateriaPrima(6.0); 
+  calculo1.setComprimentoMateriaPrima(5.0); 
   
   // Define as dimensões da primeira peça de corte
-  calculo1.setAltA(3);
-  print('Altura da primeira peça de corte: ${calculo1.getAltA()}');
-  calculo1.setCompA(3);
-  print('Comprimento da primeira peça de corte: ${calculo1.getCompA()}');
+  calculo1.setAlturaPecaA(3.0); 
+  calculo1.setComprimentoPecaA(3.0); 
   
   // Define as dimensões da segunda peça de corte
-  calculo1.setAltB(2);
-  print('Altura da segunda peça de corte: ${calculo1.getAltB()}');
-  calculo1.setCompB(2);
-  print('Comprimento da segunda peça de corte: ${calculo1.getCompB()}');
+  calculo1.setAlturaPecaB(2.0); 
+  calculo1.setComprimentoPecaB(2.0); 
   
-  // Calcula e exibe a quantidade de peças do tipo A que podem ser cortadas
-  calculo1.calcAreaM();
-  calculo1.calcAPecaA();
-  calculo1.calcQuantA();
-  print('Quantidades de peças: ${calculo1.getcalcQuantA().toInt()}');
+  // Calcula as áreas
+  calculo1.calcAreaMateriaPrima();
+  calculo1.calcAreaPecaA();
+  calculo1.calcAreaPecaB();
   
-  // Calcula e exibe a sobra de material após o corte
-  calculo1.calcSobra();
-  print('Sobra de material: R\$${calculo1.getcalcSobra().toInt()}');
+  // Exibe as áreas
+  print('Área da matéria-prima: ${calculo1.getAreaMateriaPrima()} m²');
+  print('Área da peça A: ${calculo1.getAreaPecaA()} m²');
+  print('Área da peça B: ${calculo1.getAreaPecaB()} m²');
+  
+  // Calcula e exibe a quantidade de peças A e sobra
+  calculo1.calcQuantidadePecasA();
+  print('Quantidade de peças A que podem ser cortadas: ${calculo1.getQuantidadePecasA()}');
+  print('Sobra após corte das peças A: ${calculo1.getSobra()} m²');
+  
+  // Calcula e exibe a quantidade de peças B e sobra final
+  calculo1.calcQuantidadePecasB();
+  print('Quantidade de peças B que podem ser cortadas com a sobra: ${calculo1.getQuantidadePecasB()}');
+  print('Sobra final da matéria-prima: ${calculo1.getSobra()} m²');
 }
