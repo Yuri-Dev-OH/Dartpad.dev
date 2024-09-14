@@ -1,0 +1,105 @@
+class Aluno {
+  late double mensalidade;
+  late double desconto;
+  late double aluno;  // Tipos de alunos: 1 para pagante, 2 para bolsista parcial (50% de desconto), 3 para bolsista integral (100% de desconto)
+  late double dia;    // Dia de pagamento
+  late double mensalidade_final;
+
+  void setmensalidade(double m) {
+    mensalidade = m;
+  }
+
+  void setdesconto(double d) {
+    desconto = d;
+  }
+
+  double getmensalidade() {
+    return mensalidade;
+  }
+
+  void setdia(double d1) {
+    dia = d1;
+  }
+
+  double getdia() {
+    return dia;
+  }
+
+  double getdesconto() {
+    return desconto;
+  }
+
+  void setaluno(double a) {
+    aluno = a;
+  }
+
+  double getaluno() {
+    return aluno;
+  }
+
+  void calcular_desconto() {
+    if (aluno == 3) {
+      // Aluno tipo 3 é bolsista integral e não paga nada
+      mensalidade_final = 0;
+      return;
+    }
+
+    // Calcula o desconto baseado no dia do pagamento
+    double descontoDia;
+    if (dia >= 1 && dia <= 5) {
+      descontoDia = 10;  // 10% de desconto
+    } else if (dia >= 6 && dia <= 9) {
+      descontoDia = 5;   // 5% de desconto
+    } else {
+      descontoDia = 0;   // Sem desconto
+    }
+
+    // Calcula o desconto baseado no tipo de aluno
+    double descontoAluno;
+    if (aluno == 1) {
+      descontoAluno = 0.00;  // Sem desconto para pagante
+    } else if (aluno == 2) {
+      descontoAluno = 0.50;  // 50% de desconto para bolsista parcial
+    } else {
+      descontoAluno = 0.00;  // Sem desconto para tipos inválidos
+    }
+
+    // Aplica desconto baseado no tipo de aluno
+    double mensalidade_com_desconto = mensalidade * (1 - descontoAluno);
+
+    // Aplica desconto baseado no dia de pagamento
+    mensalidade_com_desconto = mensalidade_com_desconto * (1 - descontoDia / 100);
+
+    // Calcula multa por atraso
+    double multa = 0;
+    if (dia > 10) {
+      multa = (dia - 10) * 0.33;
+    }
+
+    // Calcula a mensalidade final
+    mensalidade_final = mensalidade_com_desconto + multa;
+  }
+
+  double getcalcular_desconto() {
+    return mensalidade_final;
+  }
+}
+
+void main() {
+  var c1 = Aluno();
+  c1.setmensalidade(100);
+  c1.setaluno(2);  // 1=pagante, 2=bolsista parcial, 3=bolsista integral
+  c1.setdia(11);
+
+  c1.calcular_desconto();
+
+  print('DADOS INFORMADOS:');
+  print('Mensalidade: ${c1.getmensalidade()}');
+  print('Tipo de aluno: ${c1.getaluno()}');
+  print('Dia de pagamento: ${c1.getdia()}');
+
+  print('');
+
+  print('RESULTADOS:');
+  print('Mensalidade final: ${c1.getcalcular_desconto().toStringAsFixed(2)}');
+}
