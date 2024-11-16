@@ -117,7 +117,7 @@ class _MyAppState extends State<MyApp> {
                     children: [
                       // Imagem no topo
                       Image.network(
-                        'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/carteira-de-trabalho.png', // Coloque a URL da sua imagem aqui
+                        'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/icone%20salario.png', // Coloque a URL da sua imagem aqui
                         width: 120,
                         height: 120,
                       ),
