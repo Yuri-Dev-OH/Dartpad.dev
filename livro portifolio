@@ -1,0 +1,334 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: LivroApp(),
+    theme: ThemeData(primarySwatch: Colors.orange),
+  ));
+}
+
+class Livro {
+  String titulo;
+  String autor;
+  int anoPublicacao;
+  String editora;
+  double precoDeCusto;
+  double precoDeVenda;
+  int vendas;
+  double lucro;
+  String genero;
+  String imagemUrl;
+
+  Livro({
+    required this.titulo,
+    required this.autor,
+    required this.anoPublicacao,
+    required this.editora,
+    required this.precoDeCusto,
+    required this.precoDeVenda,
+    required this.vendas,
+    required this.lucro,
+    required this.genero,
+    required this.imagemUrl,
+  });
+
+  void calcularLucroTotal() {
+    lucro = calcularLucroPorUnidade() * vendas;
+  }
+
+  double calcularLucroPorUnidade() {
+    return precoDeVenda - precoDeCusto;
+  }
+}
+
+class LivroApp extends StatefulWidget {
+  @override
+  _LivroAppState createState() => _LivroAppState();
+}
+
+class _LivroAppState extends State<LivroApp> {
+  List<Livro> livros = [
+    Livro(
+      titulo: "O Senhor dos Anéis",
+      autor: "J.R.R. Tolkien",
+      anoPublicacao: 1954,
+      editora: "HarperCollins",
+      precoDeCusto: 25.0,
+      precoDeVenda: 50.0,
+      vendas: 200,
+      lucro: 0.0,
+      genero: "Fantasia",
+      imagemUrl: 'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/senhor%20dos%20aneis.jpg',
+    ),
+    Livro(
+      titulo: "Crepúsculo",
+      autor: "Stephenie Meyer",
+      anoPublicacao: 2005,
+      editora: "Grupo Editorial Record",
+      precoDeCusto: 18.0,
+      precoDeVenda: 35.0,
+      vendas: 350,
+      lucro: 0.0,
+      genero: "Romance",
+      imagemUrl: 'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/crepusculo.jpg',
+    ),
+    Livro(
+      titulo: "Diário de um Banana",
+      autor: "Jeff Kinney",
+      anoPublicacao: 2007,
+      editora: "Editora Vergara & Riba",
+      precoDeCusto: 12.0,
+      precoDeVenda: 25.0,
+      vendas: 500,
+      lucro: 0.0,
+      genero: "Infantil",
+      imagemUrl: 'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/diario%20de%20um%20banana.jpg',
+    ),
+  ];
+
+  List<Livro> mangas = [
+    Livro(
+      titulo: "Dragon Ball",
+      autor: "Akira Toriyama",
+      anoPublicacao: 1984,
+      editora: "Shueisha",
+      precoDeCusto: 8.0,
+      precoDeVenda: 18.0,
+      vendas: 250,
+      lucro: 0.0,
+      genero: "Ação",
+      imagemUrl: 'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/goku.jpg',
+    ),
+    Livro(
+      titulo: "Naruto",
+      autor: "Masashi Kishimoto",
+      anoPublicacao: 1999,
+      editora: "Shueisha",
+      precoDeCusto: 8.0,
+      precoDeVenda: 18.0,
+      vendas: 250,
+      lucro: 0.0,
+      genero: "Ação",
+      imagemUrl: 'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/naruto.jpg',
+    ),
+    Livro(
+      titulo: "JoJo's Bizarre Adventure",
+      autor: "Hirohiko Araki",
+      anoPublicacao: 1987,
+      editora: "Shueisha",
+      precoDeCusto: 9.0,
+      precoDeVenda: 19.0,
+      vendas: 220,
+      lucro: 0.0,
+      genero: "Aventura",
+      imagemUrl: 'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/jojo%20livro.jpg',
+    ),
+  ];
+
+  void _showBookDetails(Livro livro) {
+    livro.calcularLucroTotal(); // Calcular lucro no modal
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(livro.titulo),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Image.network(
+                livro.imagemUrl,
+                height: 135,
+                width: 135,
+                fit: BoxFit.cover,
+              ),
+              SizedBox(height: 16),
+              Text('Autor: ${livro.autor}'),
+              Text('Ano: ${livro.anoPublicacao}'),
+              Text('Editora: ${livro.editora}'),
+              Text('Gênero: ${livro.genero}'),
+              Text('Preço de custo: R\$${livro.precoDeCusto.toStringAsFixed(2)}'),
+              Text('Preço de venda: R\$${livro.precoDeVenda.toStringAsFixed(2)}'),
+              Text('Número de vendas: ${livro.vendas}'),
+              Text(
+                'Lucro: R\$${livro.lucro.toStringAsFixed(2)}',
+                style: TextStyle(color: Colors.green), // Lucro em verde
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              child: Text('Fechar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Livros e Mangás', style: TextStyle(fontSize: 20)),
+        backgroundColor: Colors.orange,
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Logo
+            Image.network(
+              'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/logo%20livro.png',
+              width: 120,
+              height: 120,
+            ),
+            SizedBox(height: 10),
+
+            // Título e Subtítulo
+            Column(
+              children: [
+                Text(
+                  'Bem-vindo ao Mundo dos Livros!',
+                  style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.black),
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'Explore e descubra novos títulos!',
+                  style: TextStyle(fontSize: 18, color: Colors.grey),
+                ),
+              ],
+            ),
+
+            SizedBox(height: 20),
+
+            // Categoria "Livro" com símbolo e título
+            Row(
+              children: [
+                Icon(Icons.book, color: Colors.red, size: 30),
+                SizedBox(width: 8),
+                Text(
+                  'Livro',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.red),
+                ),
+              ],
+            ),
+
+            // Livros
+            GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 0.65,
+              ),
+              itemCount: livros.length,
+              itemBuilder: (context, index) {
+                final livro = livros[index];
+                return GestureDetector(
+                  onTap: () => _showBookDetails(livro),
+                  child: MouseRegion(
+                    onEnter: (_) => setState(() {}),
+                    onExit: (_) => setState(() {}),
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      color: Colors.red.shade100, // Alterado para vermelho
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(
+                              livro.imagemUrl,
+                              height: 274,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            livro.titulo,
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+            SizedBox(height: 30),
+            Row(
+              children: [
+                Text(
+                  '日', // Símbolo japonês de "sol" ou "dia"
+                  style: TextStyle(fontSize: 30, color: Colors.orange),
+                ),
+                SizedBox(width: 8),
+                Text(
+                  'Mangá',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.orange),
+                ),
+              ],
+            ),
+            // Mangás
+            GridView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                childAspectRatio: 0.65,
+              ),
+              itemCount: mangas.length,
+              itemBuilder: (context, index) {
+                final manga = mangas[index];
+                return GestureDetector(
+                  onTap: () => _showBookDetails(manga),
+                  child: MouseRegion(
+                    onEnter: (_) => setState(() {}),
+                    onExit: (_) => setState(() {}),
+                    child: Card(
+                      elevation: 5,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      color: Colors.orange.shade100,
+                      child: Column(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(12),
+                            child: Image.network(
+                              manga.imagemUrl,
+                              height: 274,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            manga.titulo,
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
