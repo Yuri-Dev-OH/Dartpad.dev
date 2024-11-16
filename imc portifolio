@@ -1,0 +1,232 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false,
+    home: ImcApp(),
+    theme: ThemeData(primarySwatch: Colors.green), // Altere o tema aqui para verde
+  ));
+}
+
+class Imc {
+  late double peso;  
+  late double altura; 
+  late double imc;    
+
+  void setpeso(double p) {
+    peso = p; 
+  }
+
+  void setaltura(double a) {
+    altura = a; 
+  }
+
+  double getpeso() {
+    return peso; 
+  }
+
+  double getaltura() {
+    return altura; 
+  }
+
+  void calcular_imc() {
+    imc = peso / (altura * altura);
+  }
+
+  double getcalcular_imc() {
+    return imc; 
+  }
+}
+
+class ImcApp extends StatefulWidget {
+  @override
+  _ImcAppState createState() => _ImcAppState();
+}
+
+class _ImcAppState extends State<ImcApp> {
+  final TextEditingController pesoController = TextEditingController();
+  final TextEditingController alturaController = TextEditingController();
+  String nivelImc = '';
+  double resultadoImc = 0.0;
+
+  final imc = Imc();
+
+  void calcular() {
+    final peso = double.tryParse(pesoController.text);
+    final altura = double.tryParse(alturaController.text);
+
+    if (peso != null && altura != null) {
+      imc.setpeso(peso);
+      imc.setaltura(altura);
+
+      imc.calcular_imc();
+
+      setState(() {
+        resultadoImc = imc.getcalcular_imc();
+        if (resultadoImc < 18.5) {
+          nivelImc = 'Magreza';
+        } else if (resultadoImc >= 18.5 && resultadoImc < 24.9) {
+          nivelImc = 'Normal';
+        } else if (resultadoImc >= 25.0 && resultadoImc < 29.9) {
+          nivelImc = 'Sobrepeso';
+        } else if (resultadoImc >= 30.0 && resultadoImc < 39.9) {
+          nivelImc = 'Obesidade';
+        } else {
+          nivelImc = 'Obesidade grave';
+        }
+      });
+    } else {
+      setState(() {
+        nivelImc = 'Por favor, insira valores válidos.';
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Cálculo de IMC', style: TextStyle(fontSize: 20)),
+        backgroundColor: Colors.green, // Altere o app bar para verde
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            Image.network(
+              'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/logo%20imc.png',
+              width: 120,
+              height: 120,
+            ),
+            SizedBox(height: 10),  // Espaço entre a imagem e o título
+            Text(
+              'Calculadora de IMC', // Título abaixo da imagem
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: Colors.green,
+              ),
+            ),
+            SizedBox(height: 5),  // Espaço entre o título e o subtítulo
+            Text(
+              'Insira seu peso e altura para calcular o seu IMC', // Subtítulo
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.grey[600],
+              ),
+            ),
+            SizedBox(height: 20),
+            _buildTextField(
+              controller: pesoController,
+              label: 'Peso (kg)',
+              hint: 'Insira seu peso (exemplo: 70.50)',
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 16),
+            _buildTextField(
+              controller: alturaController,
+              label: 'Altura (m)',
+              hint: 'Insira sua altura (exemplo: 1.60)',
+              keyboardType: TextInputType.number,
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: calcular,
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 40),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                backgroundColor: Colors.orange, // Botão laranja
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.calculate,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 8),
+                  Text(
+                    'Calcular',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 20),
+            _buildResultSection(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    required String hint,
+    required TextInputType keyboardType,
+  }) {
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildResultSection() {
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: Colors.yellow[50], // Fundo amarelo suave
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.yellow[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Resultado do IMC: ${resultadoImc.toStringAsFixed(2)}',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
+          ),
+          Text(
+            'Nível de IMC: $nivelImc',
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange),
+          ),
+          SizedBox(height: 20),
+          Text(
+            'TABELA DO IMC:',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green),
+          ),
+          Text(
+            'MENOR QUE 18,5: Magreza',
+            style: TextStyle(fontSize: 16, color: Colors.green),
+          ),
+          Text(
+            'ENTRE 18,5 E 24,9: Normal',
+            style: TextStyle(fontSize: 16, color: Colors.green),
+          ),
+          Text(
+            'ENTRE 25,0 E 29,9: Sobrepeso',
+            style: TextStyle(fontSize: 16, color: Colors.green),
+          ),
+          Text(
+            'ENTRE 30,0 E 39,9: Obesidade',
+            style: TextStyle(fontSize: 16, color: Colors.green),
+          ),
+          Text(
+            'MAIOR QUE 40,0: Obesidade grave',
+            style: TextStyle(fontSize: 16, color: Colors.green),
+          ),
+        ],
+      ),
+    );
+  }
+}
