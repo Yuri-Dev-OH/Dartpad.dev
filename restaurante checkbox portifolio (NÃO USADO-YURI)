@@ -1,0 +1,224 @@
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+// Modelo para representar o item do cardápio
+class MenuItem {
+  final String name;
+  final IconData icon;
+  bool isSelected;
+
+  MenuItem({required this.name, required this.icon, this.isSelected = false});
+}
+
+// DAO para controlar o estado dos itens do cardápio
+class MenuDAO extends ChangeNotifier {
+  List<MenuItem> _menuItems = [
+    MenuItem(name: 'Arroz e Feijão', icon: Icons.rice_bowl),
+    MenuItem(name: 'Frango Grelhado', icon: Icons.dinner_dining),
+    MenuItem(name: 'Bife de Carne', icon: Icons.restaurant),
+    MenuItem(name: 'Salada', icon: Icons.grass),
+    MenuItem(name: 'Sopa', icon: Icons.soup_kitchen),
+    MenuItem(name: 'Macarrão à Bolonhesa', icon: Icons.lunch_dining),
+    MenuItem(name: 'Peixe Assado', icon: Icons.set_meal),
+    MenuItem(name: 'Hambúrguer', icon: Icons.fastfood),
+    MenuItem(name: 'Pizza', icon: Icons.local_pizza),
+  ];
+
+  List<MenuItem> get menuItems => _menuItems;
+
+  void toggleSelection(int index) {
+    _menuItems[index].isSelected = !_menuItems[index].isSelected;
+    notifyListeners();
+  }
+}
+
+// View para exibir o cardápio
+class MenuListView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final menuDAO = Provider.of<MenuDAO>(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          'Cardápio',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        backgroundColor: Colors.red,
+      ),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 130),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Monte seu prato!",
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red,
+                        ),
+                      ),
+                      Text(
+                        "Escolha os itens desejados abaixo:",
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey[700],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 16),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: menuDAO.menuItems.length,
+                    itemBuilder: (context, index) {
+                      final menuItem = menuDAO.menuItems[index];
+                      return Column(
+                        children: [
+                          ListTile(
+                            leading: Icon(menuItem.icon, color: Colors.red),
+                            title: Text(
+                              menuItem.name,
+                              style: TextStyle(fontSize: 18),
+                            ),
+                            trailing: Checkbox(
+                              value: menuItem.isSelected,
+                              onChanged: (bool? value) {
+                                menuDAO.toggleSelection(index);
+                              },
+                              activeColor: Colors.red,
+                            ),
+                          ),
+                          Divider(),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            top: 30,
+            left: MediaQuery.of(context).size.width / 2 - 50,
+            child: Image.network(
+              'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/logo%20restaurante.png',
+              height: 100,
+              fit: BoxFit.cover,
+            ),
+          ),
+        ],
+      ),
+      floatingActionButton: _ExpandableFAB(menuDAO: menuDAO),
+    );
+  }
+}
+
+// Botão flutuante expansível
+class _ExpandableFAB extends StatefulWidget {
+  final MenuDAO menuDAO;
+
+  const _ExpandableFAB({required this.menuDAO});
+
+  @override
+  State<_ExpandableFAB> createState() => _ExpandableFABState();
+}
+
+class _ExpandableFABState extends State<_ExpandableFAB> {
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        width: _isHovered ? 150 : 56,
+        height: 56,
+        child: FloatingActionButton.extended(
+          onPressed: () => _showSelectedItemsDialog(context, widget.menuDAO),
+          backgroundColor: Colors.red,
+          label: _isHovered
+              ? Row(
+                  children: [
+                    Icon(Icons.check, color: Colors.yellow),
+                    SizedBox(width: 8),
+                    Text(
+                      "Fechar Pedido",
+                      style: TextStyle(color: Colors.yellow),
+                    ),
+                  ],
+                )
+              : Icon(Icons.check, color: Colors.yellow),
+        ),
+      ),
+    );
+  }
+
+  void _showSelectedItemsDialog(BuildContext context, MenuDAO menuDAO) {
+    List<String> selectedItems = menuDAO.menuItems
+        .where((item) => item.isSelected)
+        .map((item) => item.name)
+        .toList();
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Itens Selecionados", style: TextStyle(fontSize: 20)),
+          content: selectedItems.isEmpty
+              ? Text("Nenhum item selecionado.", style: TextStyle(fontSize: 16))
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: selectedItems
+                      .map((item) => Text(item, style: TextStyle(fontSize: 16)))
+                      .toList(),
+                ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                "Fechar",
+                style: TextStyle(color: Colors.red, fontSize: 16),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (_) => MenuDAO(),
+      child: MaterialApp(
+        title: 'Cardápio com Ícones',
+        theme: ThemeData(
+          primarySwatch: Colors.red,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        home: MenuListView(),
+      ),
+    );
+  }
+}
