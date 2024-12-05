@@ -1,17 +1,20 @@
+// Importação dos pacotes necessários do Flutter
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-// Modelo para representar o item do cardápio
+// Modelo que representa um item do cardápio
 class MenuItem {
-  final String name;
-  final IconData icon;
-  bool isSelected;
+  final String name; // Nome do item do cardápio
+  final IconData icon; // Ícone que representa o item
+  bool isSelected; // Indica se o item está selecionado
 
+  // Construtor da classe MenuItem, com valores padrão para isSelected
   MenuItem({required this.name, required this.icon, this.isSelected = false});
 }
 
-// DAO para controlar o estado dos itens do cardápio
+// DAO (Data Access Object) para gerenciar o estado dos itens do cardápio
 class MenuDAO extends ChangeNotifier {
+  // Lista privada de itens do cardápio
   List<MenuItem> _menuItems = [
     MenuItem(name: 'Arroz e Feijão', icon: Icons.rice_bowl),
     MenuItem(name: 'Frango Grelhado', icon: Icons.dinner_dining),
@@ -24,35 +27,40 @@ class MenuDAO extends ChangeNotifier {
     MenuItem(name: 'Pizza', icon: Icons.local_pizza),
   ];
 
+  // Getter para acessar a lista de itens do cardápio
   List<MenuItem> get menuItems => _menuItems;
 
+  // Método para alternar a seleção de um item
   void toggleSelection(int index) {
-    _menuItems[index].isSelected = !_menuItems[index].isSelected;
-    notifyListeners();
+    _menuItems[index].isSelected = !_menuItems[index].isSelected; // Alterna o estado de seleção
+    notifyListeners(); // Notifica os ouvintes para atualizar a UI
   }
 }
 
-// View para exibir o cardápio
+// View que exibe a lista do cardápio para o usuário
 class MenuListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    // Obtém a instância de MenuDAO para acessar e controlar os itens do cardápio
     final menuDAO = Provider.of<MenuDAO>(context);
 
     return Scaffold(
+      // AppBar com o título "Cardápio"
       appBar: AppBar(
         title: Text(
           'Cardápio',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
-        backgroundColor: Colors.red,
+        backgroundColor: Colors.red, // Cor de fundo da AppBar
       ),
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 130),
+            padding: const EdgeInsets.only(top: 130), // Ajuste de espaçamento para a imagem
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // Título e subtítulo
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
@@ -76,14 +84,16 @@ class MenuListView extends StatelessWidget {
                     ],
                   ),
                 ),
-                SizedBox(height: 16),
+                SizedBox(height: 16), // Espaçamento entre os textos e a lista
                 Expanded(
                   child: ListView.builder(
-                    itemCount: menuDAO.menuItems.length,
+                    // Cria a lista de itens do cardápio dinamicamente
+                    itemCount: menuDAO.menuItems.length, // Quantidade de itens no cardápio
                     itemBuilder: (context, index) {
-                      final menuItem = menuDAO.menuItems[index];
+                      final menuItem = menuDAO.menuItems[index]; // Item específico
                       return Column(
                         children: [
+                          // Cada item é exibido com um ícone, nome e uma caixa de seleção
                           ListTile(
                             leading: Icon(menuItem.icon, color: Colors.red),
                             title: Text(
@@ -93,12 +103,12 @@ class MenuListView extends StatelessWidget {
                             trailing: Checkbox(
                               value: menuItem.isSelected,
                               onChanged: (bool? value) {
-                                menuDAO.toggleSelection(index);
+                                menuDAO.toggleSelection(index); // Alterna a seleção ao clicar
                               },
                               activeColor: Colors.red,
                             ),
                           ),
-                          Divider(),
+                          Divider(), // Linha separadora entre os itens
                         ],
                       );
                     },
@@ -107,6 +117,7 @@ class MenuListView extends StatelessWidget {
               ],
             ),
           ),
+          // Imagem no topo centralizada
           Positioned(
             top: 30,
             left: MediaQuery.of(context).size.width / 2 - 50,
@@ -118,12 +129,13 @@ class MenuListView extends StatelessWidget {
           ),
         ],
       ),
+      // Botão flutuante expansível para fechar o pedido
       floatingActionButton: _ExpandableFAB(menuDAO: menuDAO),
     );
   }
 }
 
-// Botão flutuante expansível
+// Botão flutuante expansível que exibe um texto ao ser pressionado
 class _ExpandableFAB extends StatefulWidget {
   final MenuDAO menuDAO;
 
@@ -134,19 +146,19 @@ class _ExpandableFAB extends StatefulWidget {
 }
 
 class _ExpandableFABState extends State<_ExpandableFAB> {
-  bool _isHovered = false;
+  bool _isHovered = false; // Estado para saber se o botão foi "hovered" (passado o mouse por cima)
 
   @override
   Widget build(BuildContext context) {
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
+      onEnter: (_) => setState(() => _isHovered = true), // Quando o mouse entra na área
+      onExit: (_) => setState(() => _isHovered = false), // Quando o mouse sai da área
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
-        width: _isHovered ? 150 : 56,
+        duration: Duration(milliseconds: 200), // Animação de transição de tamanho
+        width: _isHovered ? 150 : 56, // Expande o tamanho do botão quando "hovered"
         height: 56,
         child: FloatingActionButton.extended(
-          onPressed: () => _showSelectedItemsDialog(context, widget.menuDAO),
+          onPressed: () => _showSelectedItemsDialog(context, widget.menuDAO), // Exibe o diálogo com os itens selecionados
           backgroundColor: Colors.red,
           label: _isHovered
               ? Row(
@@ -165,30 +177,33 @@ class _ExpandableFABState extends State<_ExpandableFAB> {
     );
   }
 
+  // Função para exibir o diálogo com os itens selecionados
   void _showSelectedItemsDialog(BuildContext context, MenuDAO menuDAO) {
+    // Cria uma lista dos nomes dos itens selecionados
     List<String> selectedItems = menuDAO.menuItems
         .where((item) => item.isSelected)
         .map((item) => item.name)
         .toList();
 
+    // Exibe um diálogo mostrando os itens selecionados
     showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
           title: Text("Itens Selecionados", style: TextStyle(fontSize: 20)),
           content: selectedItems.isEmpty
-              ? Text("Nenhum item selecionado.", style: TextStyle(fontSize: 16))
+              ? Text("Nenhum item selecionado.", style: TextStyle(fontSize: 16)) // Se não houver itens selecionados
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: selectedItems
-                      .map((item) => Text(item, style: TextStyle(fontSize: 16)))
+                      .map((item) => Text(item, style: TextStyle(fontSize: 16))) // Exibe os itens selecionados
                       .toList(),
                 ),
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                Navigator.of(context).pop(); // Fecha o diálogo
               },
               child: Text(
                 "Fechar",
@@ -202,22 +217,24 @@ class _ExpandableFABState extends State<_ExpandableFAB> {
   }
 }
 
+// Função principal que inicializa o app
 void main() {
   runApp(MyApp());
 }
 
+// Aplicativo principal que fornece o MenuDAO para os widgets
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => MenuDAO(),
+      create: (_) => MenuDAO(), // Fornece a instância de MenuDAO para o widget
       child: MaterialApp(
         title: 'Cardápio com Ícones',
         theme: ThemeData(
-          primarySwatch: Colors.red,
+          primarySwatch: Colors.red, // Define a cor principal do tema
           visualDensity: VisualDensity.adaptivePlatformDensity,
         ),
-        home: MenuListView(),
+        home: MenuListView(), // Exibe a tela do cardápio
       ),
     );
   }
