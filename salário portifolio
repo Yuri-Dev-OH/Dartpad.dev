@@ -1,279 +1,316 @@
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(MyApp());
-}
-
-// Classe responsável pelos cálculos do salário com desconto por faltas
-class CalcSalarioRec {
-  late double salario; // Salário inicial
-  late double faltas; // Número de faltas do trabalhador
-  late double descontoFalta; // Desconto por cada falta
-  late double salarioFinal; // Salário final após descontos
-
-  // Método para definir o salário
-  void setSalario(double v) {
-    salario = v;
-  }
-
-  // Método para definir o número de faltas
-  void setFaltas(double v) {
-    faltas = v;
-  }
-
-  // Método para definir o valor do desconto por falta
-  void setDescontoFalta(double v) {
-    descontoFalta = v;
-  }
-
-  // Método para calcular o salário final após o desconto pelas faltas
-  void calcularSalarioFinal() {
-    salarioFinal = salario - (faltas * descontoFalta); // Subtrai o total das faltas do salário
-  }
-
-  // Método para obter o salário final calculado
-  double getSalarioFinal() {
-    return salarioFinal;
-  }
-
-  // Método para obter o valor do desconto por falta
-  double getDescontoFalta() {
-    return descontoFalta;
-  }
-
-  // Método para calcular o desconto total, multiplicando o número de faltas pelo desconto por falta
-  double calcularDescontoTotal() {
-    return faltas * descontoFalta;
-  }
+  // Inicializa o aplicativo Flutter
+  runApp(MaterialApp(
+    debugShowCheckedModeBanner: false, // Remove o banner "DEBUG"
+    home: MyApp(), // Define o widget principal do aplicativo
+    theme: ThemeData(primarySwatch: Colors.deepPurple), // Define o tema de cores do aplicativo
+  ));
 }
 
 class MyApp extends StatefulWidget {
   @override
-  _MyAppState createState() => _MyAppState();
+  _MyAppState createState() => _MyAppState(); // Cria o estado para a tela principal
+}
+
+class Aluno {
+  late double mensalidade; // Valor da mensalidade do aluno
+  late double desconto; // Desconto aplicado
+  late double aluno; // Tipo de aluno: 1 para pagante, 2 para bolsista parcial, 3 para bolsista integral
+  late double dia; // Dia de pagamento
+  late double mensalidadeFinal; // Valor final da mensalidade após descontos e juros
+  late double totalDesconto; // Valor total do desconto
+  late double juros; // Valor dos juros cobrados se houver atraso no pagamento
+
+  // Define a mensalidade
+  void setMensalidade(double m) {
+    mensalidade = m;
+  }
+
+  // Define o dia do pagamento
+  void setDia(double d) {
+    dia = d;
+  }
+
+  // Define o tipo de aluno (pagante, bolsista parcial ou integral)
+  void setAluno(double a) {
+    aluno = a;
+  }
+
+  // Calcula o desconto e juros com base no tipo de aluno e no dia do pagamento
+  void calcularDesconto() {
+    if (aluno == 3) {
+      // Bolsista integral não paga mensalidade
+      mensalidadeFinal = 0;
+      totalDesconto = mensalidade; // Todo valor da mensalidade é o desconto
+      juros = 0; // Não há juros para bolsistas integrais
+      return;
+    }
+
+    // Definindo desconto por dia de pagamento
+    double descontoDia = (dia >= 1 && dia <= 5)
+        ? 10 // Desconto de 10% para pagamentos entre os dias 1 e 5
+        : (dia >= 6 && dia <= 9)
+            ? 5 // Desconto de 5% para pagamentos entre os dias 6 e 9
+            : 0; // Sem desconto para pagamentos após o dia 9
+
+    // Definindo desconto por tipo de aluno (50% de desconto para bolsista parcial)
+    double descontoAluno = (aluno == 2) ? 0.50 : 0.00;
+
+    // Calcula o valor total do desconto
+    totalDesconto = mensalidade * descontoAluno + mensalidade * (descontoDia / 100);
+
+    // Calcula a mensalidade com o desconto aplicado
+    double mensalidadeComDesconto =
+        mensalidade * (1 - descontoAluno) * (1 - descontoDia / 100);
+
+    // Calcula os juros se o pagamento for realizado após o dia 10
+    juros = (dia > 10) ? (dia - 10) * 0.33 : 0; // R$0,33 de juros por dia de atraso
+
+    // Calcula a mensalidade final (mensalidade com desconto + juros)
+    mensalidadeFinal = mensalidadeComDesconto + juros;
+  }
+
+  // Métodos para retornar os valores calculados
+  double getMensalidadeFinal() => mensalidadeFinal;
+  double getTotalDesconto() => totalDesconto;
+  double getJuros() => juros;
 }
 
 class _MyAppState extends State<MyApp> {
-  // Controladores para os campos de texto
-  final TextEditingController salarioController = TextEditingController();
-  final TextEditingController faltasController = TextEditingController();
-  final TextEditingController descontoFaltaController = TextEditingController();
+  // Controladores para os campos de entrada
+  final TextEditingController mensalidadeController = TextEditingController();
+  final TextEditingController diaController = TextEditingController();
 
-  // Variáveis para armazenar os resultados do cálculo
-  double salarioFinal = 0.0;
-  double descontoFalta = 0.0;
-  double descontoTotal = 0.0;
-  String mensagem = ''; // Mensagem de erro ou alerta
+  // Tipo de aluno, iniciado como '1' (Pagante)
+  String tipoAluno = '1'; 
 
-  // Instância da classe CalcSalarioRec para fazer os cálculos
-  final calcSalario = CalcSalarioRec();
+  // Variáveis para armazenar o resultado final
+  double mensalidadeFinal = 0.0;
+  double totalDesconto = 0.0;
+  double juros = 0.0;
+  String mensagem = ''; // Mensagem de erro ou informações específicas
 
-  // Função para calcular o salário com as faltas e o desconto
-  void calcularSalario() {
-    final salario = double.tryParse(salarioController.text); // Converte o valor do salário inserido
-    final faltas = double.tryParse(faltasController.text); // Converte o número de faltas inserido
-    final descontoFalta = double.tryParse(descontoFaltaController.text); // Converte o desconto por falta inserido
+  // Instância da classe Aluno
+  final aluno = Aluno();
 
-    // Verifica se os valores inseridos são válidos (não nulos)
-    if (salario != null && faltas != null && descontoFalta != null) {
-      // Configura os valores na classe CalcSalarioRec
-      calcSalario.setSalario(salario);
-      calcSalario.setFaltas(faltas);
-      calcSalario.setDescontoFalta(descontoFalta);
+  // Função para calcular a mensalidade
+  void calcularMensalidade() {
+    // Converte os valores inseridos pelo usuário para double
+    final mensalidade = double.tryParse(mensalidadeController.text);
+    final dia = double.tryParse(diaController.text);
+    final tipo = double.tryParse(tipoAluno);
 
-      // Realiza o cálculo do salário final
-      calcSalario.calcularSalarioFinal();
+    // Verifica se os valores inseridos são válidos
+    if (mensalidade != null && dia != null && tipo != null) {
+      // Define os valores na instância do aluno
+      aluno.setMensalidade(mensalidade);
+      aluno.setDia(dia);
+      aluno.setAluno(tipo);
 
-      // Calcula o desconto total (faltas * desconto por falta)
-      descontoTotal = calcSalario.calcularDescontoTotal();
+      // Realiza os cálculos
+      aluno.calcularDesconto();
 
-      // Verifica se o desconto total é maior ou igual ao salário
-      if (descontoTotal >= salario) {
-        setState(() {
-          mensagem = 'Atenção! O desconto total é maior ou igual ao seu salário.'; // Exibe a mensagem de alerta
-        });
-      } else {
-        setState(() {
-          mensagem = ''; // Limpa a mensagem se o cálculo for válido
-        });
-      }
-
-      // Atualiza os resultados na interface
+      // Atualiza o estado da interface com os novos valores calculados
       setState(() {
-        salarioFinal = calcSalario.getSalarioFinal();
-        this.descontoFalta = calcSalario.getDescontoFalta();
+        mensalidadeFinal = aluno.getMensalidadeFinal();
+        totalDesconto = aluno.getTotalDesconto();
+        juros = aluno.getJuros();
+
+        // Exibe uma mensagem especial para o aluno integral (não paga mensalidade)
+        mensagem = tipo == 3
+            ? 'Você é bolsista integral e não precisa pagar mensalidade!'
+            : '';
       });
     } else {
+      // Caso algum campo não seja preenchido corretamente, exibe uma mensagem de erro
       setState(() {
-        mensagem = 'Por favor, preencha todos os campos corretamente.'; // Mensagem de erro caso algum campo seja inválido
+        mensagem = 'Por favor, preencha todos os campos corretamente.';
       });
     }
+  }
+
+  // Função para mostrar informações adicionais sobre os tipos de aluno, descontos e juros
+  void mostrarInformacoes(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Informações'),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Explicação sobre os tipos de aluno
+                Text(
+                  'Tipos de Aluno:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text('- Pagante: Paga o valor completo.'),
+                Text('- Bolsista Parcial: Recebe 50% de desconto na mensalidade.'),
+                Text('- Bolsista Integral: Não paga mensalidade.'),
+                SizedBox(height: 10),
+                // Explicação sobre os juros
+                Text(
+                  'Juros:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                    '- Se o pagamento for realizado após o dia 10, é cobrado R\$0,33 de juros por dia de atraso.'),
+                SizedBox(height: 10),
+                // Explicação sobre os descontos
+                Text(
+                  'Descontos:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(
+                    '- Pagamento entre os dias 1 e 5: Desconto de 10%.\n- Pagamento entre os dias 6 e 9: Desconto de 5%.'),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop(); // Fecha o dialog
+              },
+              child: Text(
+                'Fechar',
+                style: TextStyle(color: Colors.deepPurple),
+              ),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
-        backgroundColor: Colors.white,
         appBar: AppBar(
-          backgroundColor: Colors.blue,
           title: Text(
-            'Cálculo de Salário com Faltas',
-            style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Roboto', fontSize: 20),
+            'Cálculo de Mensalidade',
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
           ),
           centerTitle: true,
+          backgroundColor: Colors.deepPurple, // Cor da barra de navegação
         ),
         body: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              children: [
-                // Seção de imagem e título do aplicativo
-                Container(
-                  margin: EdgeInsets.only(bottom: 20),
-                  child: Column(
-                    children: [
-                      Image.network(
-                        'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/icone%20salario.png', // URL da imagem do aplicativo
-                        width: 120,
-                        height: 120,
-                      ),
-                      SizedBox(height: 12),
-                      Text(
-                        'Cálculo de Salário',
-                        style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black, fontFamily: 'Roboto'),
-                      ),
-                      SizedBox(height: 8),
-                      Text(
-                        'Insira as informações abaixo para calcular o salário após descontos.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 14, color: Colors.grey[600], fontFamily: 'Roboto'),
-                      ),
-                    ],
+          padding: EdgeInsets.all(16),
+          child: Column(
+            children: [
+              // Exibe uma imagem de exemplo no topo da tela
+              Image.network(
+                'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/aluno.png',
+                width: 120,
+                height: 120,
+              ),
+              SizedBox(height: 20),
+              // Texto explicativo sobre o que o aplicativo faz
+              Text(
+                'Calcule sua mensalidade com base no tipo de aluno e no dia do pagamento.',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 16, color: Colors.deepPurple[600], fontFamily: 'Arial'),
+              ),
+              SizedBox(height: 20),
+              // Campos de entrada para mensalidade e dia de pagamento
+              _buildTextField(
+                controller: mensalidadeController,
+                label: 'Mensalidade',
+                hint: 'Insira o valor da mensalidade',
+                keyboardType: TextInputType.number,
+              ),
+              SizedBox(height: 16),
+              _buildTextField(
+                controller: diaController,
+                label: 'Dia de Pagamento',
+                hint: 'Insira o dia do pagamento',
+                keyboardType: TextInputType.number,
+              ),
+              SizedBox(height: 16),
+              // Dropdown para selecionar o tipo de aluno
+              DropdownButtonFormField<String>(
+                value: tipoAluno,
+                decoration: InputDecoration(
+                  labelText: 'Tipo de Aluno',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
                   ),
                 ),
-
-                // Campos de entrada para o salário, número de faltas e desconto por falta
-                _buildTextField(
-                  controller: salarioController,
-                  label: 'Salário',
-                  hint: 'Informe o salário',
-                  keyboardType: TextInputType.number,
+                items: [
+                  DropdownMenuItem(value: '1', child: Text('Pagante')),
+                  DropdownMenuItem(value: '2', child: Text('Bolsista Parcial')),
+                  DropdownMenuItem(value: '3', child: Text('Bolsista Integral')),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    tipoAluno = value!; // Atualiza o tipo de aluno
+                  });
+                },
+              ),
+              SizedBox(height: 20),
+              // Botão para calcular a mensalidade
+              ElevatedButton(
+                onPressed: calcularMensalidade,
+                child: Text('Calcular'),
+              ),
+              SizedBox(height: 20),
+              // Exibe a mensagem de erro ou informações
+              if (mensagem.isNotEmpty)
+                Text(
+                  mensagem,
+                  style: TextStyle(fontSize: 18, color: Colors.red),
                 ),
-
-                SizedBox(height: 16),
-
-                _buildTextField(
-                  controller: faltasController,
-                  label: 'Número de Faltas',
-                  hint: 'Informe o número de faltas',
-                  keyboardType: TextInputType.number,
-                ),
-
-                SizedBox(height: 16),
-
-                _buildTextField(
-                  controller: descontoFaltaController,
-                  label: 'Desconto por Falta',
-                  hint: 'Informe o valor do desconto por falta',
-                  keyboardType: TextInputType.number,
-                ),
-
-                SizedBox(height: 20),
-
-                // Botão para realizar o cálculo
-                ElevatedButton(
-                  onPressed: calcularSalario,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 40),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
+              SizedBox(height: 20),
+              // Exibe os resultados calculados (desconto, juros e mensalidade final)
+              if (mensalidadeFinal > 0)
+                Column(
+                  children: [
+                    Text(
+                      'Total de Desconto: R\$${totalDesconto.toStringAsFixed(2)}',
+                      style: TextStyle(fontSize: 18),
                     ),
-                  ),
-                  child: Text(
-                    'Calcular',
-                    style: TextStyle(fontSize: 18, color: Colors.white, fontFamily: 'Roboto'),
-                  ),
+                    Text(
+                      'Juros: R\$${juros.toStringAsFixed(2)}',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                    Text(
+                      'Mensalidade Final: R\$${mensalidadeFinal.toStringAsFixed(2)}',
+                      style: TextStyle(fontSize: 18),
+                    ),
+                  ],
                 ),
-
-                SizedBox(height: 20),
-
-                // Exibição dos resultados do cálculo
-                if (salarioFinal > 0) _buildResultSection(), // Exibe a seção de resultados se o salário final for calculado
-              ],
-            ),
+              // Botão para exibir informações sobre o cálculo
+              ElevatedButton(
+                onPressed: () => mostrarInformacoes(context),
+                child: Text('Informações'),
+              ),
+            ],
           ),
         ),
       ),
     );
   }
 
-  // Função para criar campos de entrada com estilização
+  // Função auxiliar para criar campos de texto
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
     required String hint,
     required TextInputType keyboardType,
   }) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: TextField(
-        controller: controller,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          labelText: label,
-          hintText: hint,
-          labelStyle: TextStyle(color: Colors.blue, fontFamily: 'Roboto'),
-          hintStyle: TextStyle(color: Colors.grey[600], fontFamily: 'Roboto'),
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(vertical: 15),
+    return TextField(
+      controller: controller,
+      keyboardType: keyboardType,
+      decoration: InputDecoration(
+        labelText: label,
+        hintText: hint,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
         ),
-        style: TextStyle(fontSize: 16, fontFamily: 'Roboto'),
-      ),
-    );
-  }
-
-  // Função para exibir os resultados do cálculo
-  Widget _buildResultSection() {
-    return Container(
-      padding: EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.blue[50],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Text(
-            'Resultados',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.blue),
-          ),
-          SizedBox(height: 15),
-          Text(
-            'Desconto por Falta: R\$${descontoFalta.toStringAsFixed(2)}',
-            style: TextStyle(fontSize: 18, color: Colors.black),
-          ),
-          SizedBox(height: 10),
-          Text(
-            'Desconto Total: R\$${descontoTotal.toStringAsFixed(2)}',
-            style: TextStyle(fontSize: 18, color: Colors.red, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 10),
-          Text(
-            'Salário Final: R\$${salarioFinal.toStringAsFixed(2)}',
-            style: TextStyle(fontSize: 18, color: Colors.green),
-          ),
-          SizedBox(height: 15),
-          // Exibição de mensagem de alerta, se houver
-          if (mensagem.isNotEmpty)
-            Text(
-              mensagem,
-              style: TextStyle(fontSize: 16, color: Colors.red, fontWeight: FontWeight.bold),
-            ),
-        ],
       ),
     );
   }
