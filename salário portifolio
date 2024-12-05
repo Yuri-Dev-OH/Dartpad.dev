@@ -4,36 +4,44 @@ void main() {
   runApp(MyApp());
 }
 
+// Classe responsável pelos cálculos do salário com desconto por faltas
 class CalcSalarioRec {
-  late double salario;
-  late double faltas;
-  late double descontoFalta;
-  late double salarioFinal;
+  late double salario; // Salário inicial
+  late double faltas; // Número de faltas do trabalhador
+  late double descontoFalta; // Desconto por cada falta
+  late double salarioFinal; // Salário final após descontos
 
+  // Método para definir o salário
   void setSalario(double v) {
     salario = v;
   }
 
+  // Método para definir o número de faltas
   void setFaltas(double v) {
     faltas = v;
   }
 
+  // Método para definir o valor do desconto por falta
   void setDescontoFalta(double v) {
     descontoFalta = v;
   }
 
+  // Método para calcular o salário final após o desconto pelas faltas
   void calcularSalarioFinal() {
-    salarioFinal = salario - (faltas * descontoFalta);
+    salarioFinal = salario - (faltas * descontoFalta); // Subtrai o total das faltas do salário
   }
 
+  // Método para obter o salário final calculado
   double getSalarioFinal() {
     return salarioFinal;
   }
 
+  // Método para obter o valor do desconto por falta
   double getDescontoFalta() {
     return descontoFalta;
   }
 
+  // Método para calcular o desconto total, multiplicando o número de faltas pelo desconto por falta
   double calcularDescontoTotal() {
     return faltas * descontoFalta;
   }
@@ -45,35 +53,43 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // Controladores para os campos de texto
   final TextEditingController salarioController = TextEditingController();
   final TextEditingController faltasController = TextEditingController();
   final TextEditingController descontoFaltaController = TextEditingController();
 
+  // Variáveis para armazenar os resultados do cálculo
   double salarioFinal = 0.0;
   double descontoFalta = 0.0;
   double descontoTotal = 0.0;
-  String mensagem = ''; // Mensagem de erro
+  String mensagem = ''; // Mensagem de erro ou alerta
 
+  // Instância da classe CalcSalarioRec para fazer os cálculos
   final calcSalario = CalcSalarioRec();
 
+  // Função para calcular o salário com as faltas e o desconto
   void calcularSalario() {
-    final salario = double.tryParse(salarioController.text);
-    final faltas = double.tryParse(faltasController.text);
-    final descontoFalta = double.tryParse(descontoFaltaController.text);
+    final salario = double.tryParse(salarioController.text); // Converte o valor do salário inserido
+    final faltas = double.tryParse(faltasController.text); // Converte o número de faltas inserido
+    final descontoFalta = double.tryParse(descontoFaltaController.text); // Converte o desconto por falta inserido
 
-    // Verifica se os valores são válidos
+    // Verifica se os valores inseridos são válidos (não nulos)
     if (salario != null && faltas != null && descontoFalta != null) {
+      // Configura os valores na classe CalcSalarioRec
       calcSalario.setSalario(salario);
       calcSalario.setFaltas(faltas);
       calcSalario.setDescontoFalta(descontoFalta);
 
+      // Realiza o cálculo do salário final
       calcSalario.calcularSalarioFinal();
+
+      // Calcula o desconto total (faltas * desconto por falta)
       descontoTotal = calcSalario.calcularDescontoTotal();
 
       // Verifica se o desconto total é maior ou igual ao salário
       if (descontoTotal >= salario) {
         setState(() {
-          mensagem = 'Atenção! O desconto total é maior ou igual ao seu salário.';
+          mensagem = 'Atenção! O desconto total é maior ou igual ao seu salário.'; // Exibe a mensagem de alerta
         });
       } else {
         setState(() {
@@ -81,13 +97,14 @@ class _MyAppState extends State<MyApp> {
         });
       }
 
+      // Atualiza os resultados na interface
       setState(() {
         salarioFinal = calcSalario.getSalarioFinal();
         this.descontoFalta = calcSalario.getDescontoFalta();
       });
     } else {
       setState(() {
-        mensagem = 'Por favor, preencha todos os campos corretamente.';
+        mensagem = 'Por favor, preencha todos os campos corretamente.'; // Mensagem de erro caso algum campo seja inválido
       });
     }
   }
@@ -110,14 +127,13 @@ class _MyAppState extends State<MyApp> {
             padding: const EdgeInsets.all(16.0),
             child: Column(
               children: [
-                // Espaço para a imagem do GitHub
+                // Seção de imagem e título do aplicativo
                 Container(
                   margin: EdgeInsets.only(bottom: 20),
                   child: Column(
                     children: [
-                      // Imagem no topo
                       Image.network(
-                        'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/icone%20salario.png', // Coloque a URL da sua imagem aqui
+                        'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/icone%20salario.png', // URL da imagem do aplicativo
                         width: 120,
                         height: 120,
                       ),
@@ -136,7 +152,7 @@ class _MyAppState extends State<MyApp> {
                   ),
                 ),
 
-                // Campo de texto para o salário
+                // Campos de entrada para o salário, número de faltas e desconto por falta
                 _buildTextField(
                   controller: salarioController,
                   label: 'Salário',
@@ -146,7 +162,6 @@ class _MyAppState extends State<MyApp> {
 
                 SizedBox(height: 16),
 
-                // Campo de texto para o número de faltas
                 _buildTextField(
                   controller: faltasController,
                   label: 'Número de Faltas',
@@ -156,7 +171,6 @@ class _MyAppState extends State<MyApp> {
 
                 SizedBox(height: 16),
 
-                // Campo de texto para o desconto da falta
                 _buildTextField(
                   controller: descontoFaltaController,
                   label: 'Desconto por Falta',
@@ -166,7 +180,7 @@ class _MyAppState extends State<MyApp> {
 
                 SizedBox(height: 20),
 
-                // Botão de cálculo
+                // Botão para realizar o cálculo
                 ElevatedButton(
                   onPressed: calcularSalario,
                   style: ElevatedButton.styleFrom(
@@ -184,8 +198,8 @@ class _MyAppState extends State<MyApp> {
 
                 SizedBox(height: 20),
 
-                // Exibindo o resultado
-                if (salarioFinal > 0) _buildResultSection(),
+                // Exibição dos resultados do cálculo
+                if (salarioFinal > 0) _buildResultSection(), // Exibe a seção de resultados se o salário final for calculado
               ],
             ),
           ),
@@ -223,7 +237,7 @@ class _MyAppState extends State<MyApp> {
     );
   }
 
-  // Função para exibir os resultados
+  // Função para exibir os resultados do cálculo
   Widget _buildResultSection() {
     return Container(
       padding: EdgeInsets.all(20),
@@ -250,15 +264,14 @@ class _MyAppState extends State<MyApp> {
           SizedBox(height: 10),
           Text(
             'Salário Final: R\$${salarioFinal.toStringAsFixed(2)}',
-            style: TextStyle(fontSize: 18, color: Colors.green, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: 18, color: Colors.green),
           ),
-          if (mensagem.isNotEmpty) // Exibe a mensagem de erro somente se houver
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Text(
-                mensagem,
-                style: TextStyle(fontSize: 16, color: Colors.red, fontWeight: FontWeight.bold),
-              ),
+          SizedBox(height: 15),
+          // Exibição de mensagem de alerta, se houver
+          if (mensagem.isNotEmpty)
+            Text(
+              mensagem,
+              style: TextStyle(fontSize: 16, color: Colors.red, fontWeight: FontWeight.bold),
             ),
         ],
       ),
