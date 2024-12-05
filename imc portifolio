@@ -1,68 +1,80 @@
 import 'package:flutter/material.dart';
 
+// Função principal para iniciar o aplicativo
 void main() {
   runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    home: ImcApp(),
-    theme: ThemeData(primarySwatch: Colors.green), // Altere o tema aqui para verde
+    debugShowCheckedModeBanner: false,  // Desativa o banner de debug
+    home: ImcApp(),  // Define a tela principal como ImcApp
+    theme: ThemeData(primarySwatch: Colors.green),  // Define o tema do app como verde
   ));
 }
 
+// Classe para representar o cálculo do IMC
 class Imc {
-  late double peso;  
-  late double altura; 
-  late double imc;    
+  late double peso;  // Peso do usuário
+  late double altura; // Altura do usuário
+  late double imc;    // Resultado do cálculo do IMC
 
+  // Define o peso do usuário
   void setpeso(double p) {
-    peso = p; 
+    peso = p;
   }
 
+  // Define a altura do usuário
   void setaltura(double a) {
-    altura = a; 
+    altura = a;
   }
 
+  // Retorna o peso do usuário
   double getpeso() {
-    return peso; 
+    return peso;
   }
 
+  // Retorna a altura do usuário
   double getaltura() {
-    return altura; 
+    return altura;
   }
 
+  // Calcula o IMC com base no peso e altura
   void calcular_imc() {
     imc = peso / (altura * altura);
   }
 
+  // Retorna o valor calculado do IMC
   double getcalcular_imc() {
-    return imc; 
+    return imc;
   }
 }
 
+// Tela principal do aplicativo
 class ImcApp extends StatefulWidget {
   @override
   _ImcAppState createState() => _ImcAppState();
 }
 
+// Estado da tela principal, onde o cálculo do IMC é realizado
 class _ImcAppState extends State<ImcApp> {
-  final TextEditingController pesoController = TextEditingController();
-  final TextEditingController alturaController = TextEditingController();
-  String nivelImc = '';
-  double resultadoImc = 0.0;
+  final TextEditingController pesoController = TextEditingController(); // Controlador para o campo de peso
+  final TextEditingController alturaController = TextEditingController(); // Controlador para o campo de altura
+  String nivelImc = '';  // Nível de IMC (magreza, normal, sobrepeso, etc.)
+  double resultadoImc = 0.0;  // Resultado do cálculo do IMC
 
-  final imc = Imc();
+  final imc = Imc();  // Instancia a classe IMC
 
+  // Função que calcula o IMC quando o botão é pressionado
   void calcular() {
-    final peso = double.tryParse(pesoController.text);
-    final altura = double.tryParse(alturaController.text);
+    final peso = double.tryParse(pesoController.text);  // Tenta converter o peso inserido para double
+    final altura = double.tryParse(alturaController.text);  // Tenta converter a altura inserida para double
 
     if (peso != null && altura != null) {
-      imc.setpeso(peso);
-      imc.setaltura(altura);
+      imc.setpeso(peso);  // Define o peso na classe IMC
+      imc.setaltura(altura);  // Define a altura na classe IMC
 
-      imc.calcular_imc();
+      imc.calcular_imc();  // Calcula o IMC
 
       setState(() {
-        resultadoImc = imc.getcalcular_imc();
+        resultadoImc = imc.getcalcular_imc();  // Atualiza o resultado do IMC
+        // Determina o nível de IMC com base no valor calculado
         if (resultadoImc < 18.5) {
           nivelImc = 'Magreza';
         } else if (resultadoImc >= 18.5 && resultadoImc < 24.9) {
@@ -77,45 +89,48 @@ class _ImcAppState extends State<ImcApp> {
       });
     } else {
       setState(() {
-        nivelImc = 'Por favor, insira valores válidos.';
+        nivelImc = 'Por favor, insira valores válidos.';  // Exibe mensagem caso os valores não sejam válidos
       });
     }
   }
 
+  // Função que constrói a interface da tela
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cálculo de IMC', style: TextStyle(fontSize: 20)),
-        backgroundColor: Colors.green, // Altere o app bar para verde
+        title: Text('Cálculo de IMC', style: TextStyle(fontSize: 20)),  // Título da app bar
+        backgroundColor: Colors.green,  // Cor da app bar
       ),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+      body: SingleChildScrollView(  // Permite a rolagem da tela
+        padding: EdgeInsets.all(16),  // Padding geral de 16
         child: Column(
           children: [
+            // Exibe uma imagem
             Image.network(
               'https://raw.githubusercontent.com/Yuri-Dev-OH/Dartpad.dev/refs/heads/main/logo%20imc.png',
               width: 120,
               height: 120,
             ),
-            SizedBox(height: 10),  // Espaço entre a imagem e o título
+            SizedBox(height: 10),  // Espaçamento entre a imagem e o título
             Text(
-              'Calculadora de IMC', // Título abaixo da imagem
+              'Calculadora de IMC',  // Título principal
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
-                color: Colors.green,
+                color: Colors.green,  // Cor do título
               ),
             ),
-            SizedBox(height: 5),  // Espaço entre o título e o subtítulo
+            SizedBox(height: 5),  // Espaçamento entre o título e o subtítulo
             Text(
-              'Insira seu peso e altura para calcular o seu IMC', // Subtítulo
+              'Insira seu peso e altura para calcular o seu IMC',  // Subtítulo
               style: TextStyle(
                 fontSize: 16,
-                color: Colors.grey[600],
+                color: Colors.grey[600],  // Cor do subtítulo
               ),
             ),
             SizedBox(height: 20),
+            // Campos de entrada para peso e altura
             _buildTextField(
               controller: pesoController,
               label: 'Peso (kg)',
@@ -130,31 +145,33 @@ class _ImcAppState extends State<ImcApp> {
               keyboardType: TextInputType.number,
             ),
             SizedBox(height: 20),
+            // Botão para calcular o IMC
             ElevatedButton(
-              onPressed: calcular,
+              onPressed: calcular,  // Ação ao pressionar o botão
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 12, horizontal: 40),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(25),
                 ),
-                backgroundColor: Colors.orange, // Botão laranja
+                backgroundColor: Colors.orange,  // Cor do botão
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
                     Icons.calculate,
-                    color: Colors.white,
+                    color: Colors.white,  // Cor do ícone do botão
                   ),
                   SizedBox(width: 8),
                   Text(
-                    'Calcular',
+                    'Calcular',  // Texto no botão
                     style: TextStyle(fontSize: 18, color: Colors.white),
                   ),
                 ],
               ),
             ),
             SizedBox(height: 20),
+            // Exibe o resultado do IMC
             _buildResultSection(),
           ],
         ),
@@ -162,6 +179,7 @@ class _ImcAppState extends State<ImcApp> {
     );
   }
 
+  // Função para criar os campos de entrada (peso e altura)
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
@@ -169,23 +187,24 @@ class _ImcAppState extends State<ImcApp> {
     required TextInputType keyboardType,
   }) {
     return TextField(
-      controller: controller,
-      keyboardType: keyboardType,
+      controller: controller,  // Controlador do campo de entrada
+      keyboardType: keyboardType,  // Tipo de teclado
       decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
+        labelText: label,  // Rótulo do campo
+        hintText: hint,  // Texto de dica
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12),  // Bordas arredondadas
         ),
       ),
     );
   }
 
+  // Função que constrói a seção de resultados
   Widget _buildResultSection() {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.yellow[50], // Fundo amarelo suave
+        color: Colors.yellow[50],  // Cor de fundo amarelo suave
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.yellow[200]!),
       ),
@@ -193,20 +212,20 @@ class _ImcAppState extends State<ImcApp> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Resultado do IMC: ${resultadoImc.toStringAsFixed(2)}',
+            'Resultado do IMC: ${resultadoImc.toStringAsFixed(2)}',  // Exibe o IMC calculado
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.green),
           ),
           Text(
-            'Nível de IMC: $nivelImc',
+            'Nível de IMC: $nivelImc',  // Exibe o nível do IMC
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.orange),
           ),
           SizedBox(height: 20),
           Text(
-            'TABELA DO IMC:',
+            'TABELA DO IMC:',  // Título da tabela de IMC
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.green),
           ),
           Text(
-            'MENOR QUE 18,5: Magreza',
+            'MENOR QUE 18,5: Magreza',  // Tabela de valores de IMC
             style: TextStyle(fontSize: 16, color: Colors.green),
           ),
           Text(
